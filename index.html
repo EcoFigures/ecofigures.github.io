@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoFigures — A Database of Ecological Figures for Teaching</title>
+<meta name="description" content="A searchable, curated collection of peer-reviewed ecological figures for building quantitative literacy in undergraduate ecology courses.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="wrap site-nav-inner">
+    <a href="index.html" class="nav-logo">EcoFigures</a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link active">Database</a>
+      <a href="about.html" class="nav-link">About the Project</a>
+      <a href="team.html" class="nav-link">Who We Are</a>
+    </div>
+  </div>
+</nav>
+
+<header class="site-header">
+  <div class="wrap">
+    <div class="eyebrow">Curated figure database</div>
+    <h1>EcoFigures</h1>
+    <p class="tagline">A searchable collection of figures from peer-reviewed ecology literature, built to give students real practice interpreting ecological figures.</p>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="catalog-drawer">
+    <div class="drawer-row">
+      <div class="search-input">
+        <input type="text" id="searchInput" placeholder="Search by title, citation, or keyword…">
+      </div>
+      <select id="topicFilter"><option value="">All topics</option></select>
+      <select id="taxaFilter"><option value="">All taxa</option></select>
+      <select id="typeFilter"><option value="">All figure types</option></select>
+      <select id="conceptFilter"><option value="">All 4DEE concepts</option></select>
+      <select id="difficultyFilter">
+        <option value="">All difficulty levels</option>
+        <option value="1">1 — Introductory</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5 — Advanced</option>
+      </select>
+      <label class="checkbox-pill">
+        <input type="checkbox" id="openAccessFilter">
+        Open access only
+      </label>
+    </div>
+    <div class="results-count" id="resultsCount"></div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+</div>
+
+<footer>
+  <div class="wrap">
+    Built for instructors who want their students interpreting real ecological data, not just recognizing textbook graphs. Figures sourced from peer-reviewed journals and curated by the EcoFigures team. Contact Robin Decker at rrdecker@ucdavis.edu for questions.
+  </div>
+</footer>
+
+<!-- Corner menu: contribute / report an error / contact -->
+<div class="corner-menu">
+  <button class="corner-menu-btn" id="cornerMenuBtn" aria-label="Open menu" aria-expanded="false">
+    <span class="corner-menu-icon">+</span>
+  </button>
+  <div class="corner-menu-panel" id="cornerMenuPanel">
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSfI8NrZQKVxbLrWfAUtjBpuLET1j-5MnVPoOx80wVoR8zE58Q/viewform?usp=dialog" target="_blank" rel="noopener noreferrer" class="corner-menu-item">
+      <span class="corner-menu-item-title">Suggest a figure</span>
+      <span class="corner-menu-item-sub">Recommend a paper for the database</span>
+    </a>
+    <a href="FORM_URL_REPORT_ERROR" target="_blank" rel="noopener noreferrer" class="corner-menu-item">
+      <span class="corner-menu-item-title">Report an error</span>
+      <span class="corner-menu-item-sub">Flag something incorrect or broken</span>
+    </a>
+    <a href="mailto:rrdecker@ucdavis.edu" class="corner-menu-item">
+      <span class="corner-menu-item-title">Contact the PI</span>
+      <span class="corner-menu-item-sub">rrdecker@ucdavis.edu</span>
+    </a>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" role="dialog" aria-modal="true">
+    <button class="modal-close" id="modalClose" aria-label="Close">×</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="script.js"></script>
+<script src="corner-menu.js"></script>
+</body>
+</html>

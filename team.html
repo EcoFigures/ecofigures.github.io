@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Who We Are — EcoFigures</title>
+<meta name="description" content="Meet the people behind the EcoFigures database.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="wrap site-nav-inner">
+    <a href="index.html" class="nav-logo">EcoFigures</a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Database</a>
+      <a href="about.html" class="nav-link">About the Project</a>
+      <a href="team.html" class="nav-link active">Who We Are</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-content">
+  <h1>Who We Are</h1>
+  <p class="lede">
+    EcoFigures is built and maintained by the people below. We are a team of undergraduate student researchers led by PI Dr. Robin Decker. We share an interest in improving quantitative literacy in undergraduate ecology courses. Interested in joining the team? Contact us at <a href="mailto:rrdecker@ucdavis.edu">rrdecker@ucdavis.edu</a>.
+  </p>
+
+  <!--
+    TEAM CARD TEMPLATE
+    -------------------
+    Copy one <div class="team-card"> block per person.
+
+    For a photo: replace the <span> inside .team-avatar with
+      <img src="images/yourfile.jpg" alt="Full Name">
+    and add the photo to an "images" folder in this same directory.
+
+    No photo yet? Leave the <span> with initials - it renders as a
+    colored circle automatically, no image needed.
+  -->
+  <div class="team-grid">
+
+    <div class="team-card">
+      <div class="team-avatar fallback-forest"><span><img src="Decker_photo.jpg" alt="Full Name"></span></div>
+      <div class="team-name">Dr. Robin Decker</div>
+      <div class="team-role">Principal Investigator</div>
+      <div class="team-bio">Robin is an Assistant Professor of Teaching in the Department of Evolution and Ecology at the University of California, Davis. Her research focuses on inclusive teaching pedagogies and the development of quantitative reasoning skills in ecology education.</div>
+    </div>
+
+    <div class="team-card">
+      <div class="team-avatar fallback-amber"><span>—</span></div>
+      <div class="team-name">[Name]</div>
+      <div class="team-role">Undergraduate Student Assistant Researcher</div>
+      <div class="team-bio">[EDIT ME — short bio.]</div>
+    </div>
+
+  </div>
+</div>
+
+<div class="corner-menu">
+  <button class="corner-menu-btn" id="cornerMenuBtn" aria-label="Open menu" aria-expanded="false">
+    <span class="corner-menu-icon">+</span>
+  </button>
+  <div class="corner-menu-panel" id="cornerMenuPanel">
+    <a href="FORM_URL_CONTRIBUTE" target="_blank" rel="noopener noreferrer" class="corner-menu-item">
+      <span class="corner-menu-item-title">Suggest a figure</span>
+      <span class="corner-menu-item-sub">Recommend a paper for the database</span>
+    </a>
+    <a href="FORM_URL_REPORT_ERROR" target="_blank" rel="noopener noreferrer" class="corner-menu-item">
+      <span class="corner-menu-item-title">Report an error</span>
+      <span class="corner-menu-item-sub">Flag something incorrect or broken</span>
+    </a>
+    <a href="mailto:rrdecker@ucdavis.edu" class="corner-menu-item">
+      <span class="corner-menu-item-title">Contact the PI</span>
+      <span class="corner-menu-item-sub">rrdecker@ucdavis.edu</span>
+    </a>
+  </div>
+</div>
+
+<script src="corner-menu.js"></script>
+</body>
+</html>
