@@ -31,12 +31,31 @@ function escapeAttr(str = '') {
   return escapeHTML(str).replace(/"/g, '&quot;');
 }
 
+// Lightweight markup support for free-text fields (citation, methods,
+// notes, questions, answers). Escapes HTML first for safety, then converts
+// a small set of plain-text markers into real formatting:
+//   **bold text**      -> <strong>bold text</strong>
+//   *italic text*       -> <em>italic text</em>
+//   _underlined text_   -> <u>underlined text</u>
+// Type these markers directly into the spreadsheet cell around the text
+// you want formatted - CSV itself can't store rich text, so this is the
+// workaround. Order matters: bold (**) is applied before italic (*) so
+// "**bold**" isn't partially matched by the italic pattern first.
+function formatText(str = '') {
+  let out = escapeHTML(str);
+  out = out.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  out = out.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  out = out.replace(/_(.+?)_/g, '<u>$1</u>');
+  return out;
+}
+
 function parseCSV(path) {
   return new Promise((resolve, reject) => {
     Papa.parse(path, {
       download: true,
       header: true,
       skipEmptyLines: true,
+      encoding: 'UTF-8',
       complete: (results) => resolve(results.data),
       error: reject
     });
@@ -58,6 +77,8 @@ Promise.all([parseCSV('data.csv'), parseCSV('questions.csv')])
       ...row,
       difficulty: parseInt(row.difficulty, 10) || 0,
       taxaList: splitTags(row.taxa),
+      topicList: splitTags(row.topic),
+      typeList: splitTags(row.figure_type),
       isOpenAccess: (row.open_source || '').trim().toLowerCase() === 'yes'
     }));
 
@@ -86,9 +107,9 @@ Promise.all([parseCSV('data.csv'), parseCSV('questions.csv')])
   });
 
 function populateFilterOptions() {
-  fillSelect(topicFilter, uniqueValues('topic'));
+  fillSelect(topicFilter, uniqueTagValues('topicList'));
   fillSelect(taxaFilter, uniqueTagValues('taxaList'));
-  fillSelect(typeFilter, uniqueValues('figure_type'));
+  fillSelect(typeFilter, uniqueTagValues('typeList'));
   fillSelect(conceptFilter, uniqueValues('4DEE_concept'));
 }
 
@@ -121,9 +142,9 @@ function getFiltered() {
   const openOnly = openAccessFilter.checked;
 
   return ALL_FIGURES.filter(f => {
-    if (topic && f.topic !== topic) return false;
+    if (topic && !f.topicList.includes(topic)) return false;
     if (taxa && !f.taxaList.includes(taxa)) return false;
-    if (type && f.figure_type !== type) return false;
+    if (type && !f.typeList.includes(type)) return false;
     if (concept && f['4DEE_concept'] !== concept) return false;
     if (difficulty && String(f.difficulty) !== difficulty) return false;
     if (openOnly && !f.isOpenAccess) return false;
@@ -212,11 +233,13 @@ window.__thumbFallback = function (imgEl) {
 };
 
 function pillsHTML(f) {
+  const topicPills = f.topicList.map(t => `<span class="pill topic">${escapeHTML(t)}</span>`).join('');
   const taxaPills = f.taxaList.map(t => `<span class="pill taxa">${escapeHTML(t)}</span>`).join('');
+  const typePills = f.typeList.map(t => `<span class="pill type">${escapeHTML(t)}</span>`).join('');
   return `
-    ${f.topic ? `<span class="pill topic">${escapeHTML(f.topic)}</span>` : ''}
+    ${topicPills}
     ${taxaPills}
-    ${f.figure_type ? `<span class="pill type">${escapeHTML(f.figure_type)}</span>` : ''}
+    ${typePills}
     ${f['4DEE_concept'] ? `<span class="pill concept">${escapeHTML(f['4DEE_concept'])}</span>` : ''}
   `;
 }
@@ -231,7 +254,7 @@ function cardHTML(f) {
         ${f.isOpenAccess ? `<span class="badge-open-access">Open access</span>` : ''}
       </div>
       <h3>${escapeHTML(f.title)}</h3>
-      <div class="citation">${escapeHTML(f.citation)}</div>
+      <div class="citation">${formatText(f.citation)}</div>
       <div class="pills">${pillsHTML(f)}</div>
       <div class="difficulty-row">
         <span class="difficulty-label">Difficulty</span>
@@ -255,9 +278,9 @@ function questionsHTML(f) {
   return qs.map((q, i) => `
     <div class="qa-block">
       <div class="q-number">Question ${i + 1} of ${qs.length}</div>
-      <div class="q-text">${escapeHTML(q.question)}</div>
+      <div class="q-text">${formatText(q.question)}</div>
       <button class="reveal-btn qa-reveal-btn">Show answer</button>
-      <div class="modal-answer qa-answer">${escapeHTML(q.answer)}</div>
+      <div class="modal-answer qa-answer">${formatText(q.answer)}</div>
     </div>
   `).join('');
 }
@@ -268,7 +291,7 @@ function openModal(f) {
   modalBody.innerHTML = `
     <div class="modal-eyebrow">${escapeHTML(f.id)} · ${escapeHTML(f.journal)} · ${escapeHTML(f.year)}${figLabel}</div>
     <h2>${escapeHTML(f.title)}</h2>
-    <div class="citation">${escapeHTML(f.citation)}</div>
+    <div class="citation">${formatText(f.citation)}</div>
 
     <div class="modal-thumb">${thumbHTML(f)}</div>
 
@@ -281,12 +304,12 @@ function openModal(f) {
 
     ${f.methods_summary && !f.methods_summary.startsWith('[') ? `
       <div class="modal-section-label">Methods</div>
-      <div class="modal-notes-text">${escapeHTML(f.methods_summary)}</div>
+      <div class="modal-notes-text">${formatText(f.methods_summary)}</div>
     ` : ''}
 
     ${f.interpretation_notes && !f.interpretation_notes.startsWith('[') ? `
       <div class="modal-section-label">Notes for interpreting this figure</div>
-      <div class="modal-notes-text">${escapeHTML(f.interpretation_notes)}</div>
+      <div class="modal-notes-text">${formatText(f.interpretation_notes)}</div>
     ` : ''}
 
     <div class="modal-section-label">Practice questions</div>
